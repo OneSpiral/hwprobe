@@ -8,6 +8,12 @@ The format is inspired by Keep a Changelog.
 
 ### Added
 
+- no unreleased entries yet
+
+## 0.1.0 — 2026-03-12
+
+### Added
+
 - browser compatibility matrix for diagnostic modules
 - measurement limits guide for refresh-rate, polling, motion, and ghosting interpretation
 - permission-handling checklist for media diagnostics

@@ -75,6 +75,7 @@ describe("repository sponsorship docs", () => {
 		expect(readme).toContain("Sponsored by **[hwprobe.com](https://hwprobe.com)**");
 		expect(readme).toContain("community");
 		expect(readme).toContain("actions/workflows/ci.yml");
+		expect(readme).toContain("/releases");
 	});
 
 	it("describes how contributors can improve technical capabilities", () => {
@@ -159,6 +160,7 @@ describe("repository sponsorship docs", () => {
 	it("publishes a changelog for public milestones", () => {
 		const changelog = readFileSync(changelogPath, "utf8");
 		expect(changelog).toContain("Unreleased");
+		expect(changelog).toContain("0.1.0");
 		expect(changelog).toContain("Added");
 		expect(changelog).toContain("multi-controller");
 		expect(changelog).toContain("haptics");
