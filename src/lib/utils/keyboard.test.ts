@@ -1,7 +1,18 @@
 import { describe, it, expect } from "vitest";
-import { KEYBOARD_ROWS, keyLabel, keyWidth } from "./keyboard";
+import { KEYBOARD_LAYOUTS, KEYBOARD_ROWS, keyLabel, keyLegend, keyWidth } from "./keyboard";
 
 describe("keyboard utils", () => {
+	describe("KEYBOARD_LAYOUTS", () => {
+		it("exposes a small set of common layout presets", () => {
+			expect(KEYBOARD_LAYOUTS.map((layout) => layout.id)).toEqual([
+				"ansi-us",
+				"iso-uk",
+				"iso-de",
+				"iso-fr",
+			]);
+		});
+	});
+
 	describe("KEYBOARD_ROWS", () => {
 		it("has 6 rows", () => {
 			expect(KEYBOARD_ROWS).toHaveLength(6);
@@ -40,6 +51,30 @@ describe("keyboard utils", () => {
 
 		it("falls back to code for unknown keys", () => {
 			expect(keyLabel("SomeWeirdKey")).toBe("SomeWeirdKey");
+		});
+	});
+
+	describe("keyLegend", () => {
+		it("uses US legends by default", () => {
+			expect(keyLegend("KeyA", "ansi-us")).toBe("A");
+			expect(keyLegend("Minus", "ansi-us")).toBe("-");
+		});
+
+		it("renders UK-specific legends where they differ", () => {
+			expect(keyLegend("Quote", "iso-uk")).toBe("@");
+			expect(keyLegend("Backquote", "iso-uk")).toBe("¬");
+		});
+
+		it("renders German QWERTZ legends where they differ", () => {
+			expect(keyLegend("KeyY", "iso-de")).toBe("Z");
+			expect(keyLegend("KeyZ", "iso-de")).toBe("Y");
+			expect(keyLegend("Semicolon", "iso-de")).toBe("Ö");
+		});
+
+		it("renders French AZERTY legends where they differ", () => {
+			expect(keyLegend("KeyQ", "iso-fr")).toBe("A");
+			expect(keyLegend("KeyA", "iso-fr")).toBe("Q");
+			expect(keyLegend("KeyW", "iso-fr")).toBe("Z");
 		});
 	});
 

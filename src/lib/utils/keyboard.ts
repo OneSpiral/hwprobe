@@ -5,7 +5,15 @@ export interface KeyState {
 	count: number;
 }
 
-/** Standard US QWERTY layout rows */
+export type KeyboardLayoutId = "ansi-us" | "iso-uk" | "iso-de" | "iso-fr";
+
+export interface KeyboardLayoutOption {
+	id: KeyboardLayoutId;
+	label: string;
+	description: string;
+}
+
+/** Physical keyboard grid used by the tester. Printed legends can vary by locale. */
 export const KEYBOARD_ROWS: string[][] = [
 	[
 		"Escape",
@@ -94,46 +102,127 @@ export const KEYBOARD_ROWS: string[][] = [
 	],
 ];
 
-/** Short display label for a key code */
-export function keyLabel(code: string): string {
-	const map: Record<string, string> = {
-		Escape: "Esc",
-		Backquote: "`",
-		Digit1: "1",
-		Digit2: "2",
-		Digit3: "3",
-		Digit4: "4",
-		Digit5: "5",
-		Digit6: "6",
-		Digit7: "7",
-		Digit8: "8",
-		Digit9: "9",
-		Digit0: "0",
-		Minus: "-",
-		Equal: "=",
-		Backspace: "⌫",
-		Tab: "Tab",
-		BracketLeft: "[",
-		BracketRight: "]",
-		Backslash: "\\",
-		CapsLock: "Caps",
-		Semicolon: ";",
-		Quote: "'",
-		Enter: "Enter",
-		ShiftLeft: "⇧ L",
-		ShiftRight: "⇧ R",
-		ControlLeft: "Ctrl L",
-		ControlRight: "Ctrl R",
-		MetaLeft: "⌘ L",
-		MetaRight: "⌘ R",
-		AltLeft: "Alt L",
-		AltRight: "Alt R",
-		Space: "Space",
-	};
+export const KEYBOARD_LAYOUTS: KeyboardLayoutOption[] = [
+	{
+		id: "ansi-us",
+		label: "English (US)",
+		description: "ANSI-style US QWERTY legends",
+	},
+	{
+		id: "iso-uk",
+		label: "English (UK)",
+		description: "UK legends on a QWERTY layout",
+	},
+	{
+		id: "iso-de",
+		label: "Deutsch (DE)",
+		description: "German QWERTZ legends",
+	},
+	{
+		id: "iso-fr",
+		label: "Français (FR)",
+		description: "French AZERTY legends",
+	},
+];
 
-	if (map[code]) return map[code];
+const BASE_LABELS: Record<string, string> = {
+	Escape: "Esc",
+	Backquote: "`",
+	Digit1: "1",
+	Digit2: "2",
+	Digit3: "3",
+	Digit4: "4",
+	Digit5: "5",
+	Digit6: "6",
+	Digit7: "7",
+	Digit8: "8",
+	Digit9: "9",
+	Digit0: "0",
+	Minus: "-",
+	Equal: "=",
+	Backspace: "⌫",
+	Tab: "Tab",
+	BracketLeft: "[",
+	BracketRight: "]",
+	Backslash: "\\",
+	CapsLock: "Caps",
+	Semicolon: ";",
+	Quote: "'",
+	Enter: "Enter",
+	ShiftLeft: "⇧ L",
+	ShiftRight: "⇧ R",
+	ControlLeft: "Ctrl L",
+	ControlRight: "Ctrl R",
+	MetaLeft: "⌘ L",
+	MetaRight: "⌘ R",
+	AltLeft: "Alt L",
+	AltRight: "Alt R",
+	Space: "Space",
+};
+
+const LAYOUT_OVERRIDES: Record<KeyboardLayoutId, Record<string, string>> = {
+	"ansi-us": {},
+	"iso-uk": {
+		Backquote: "¬",
+		Digit2: '"',
+		Digit3: "£",
+		Quote: "@",
+		Backslash: "#",
+	},
+	"iso-de": {
+		Backquote: "^",
+		Minus: "ß",
+		Equal: "´",
+		KeyY: "Z",
+		KeyZ: "Y",
+		BracketLeft: "Ü",
+		BracketRight: "+",
+		Backslash: "#",
+		Semicolon: "Ö",
+		Quote: "Ä",
+		Slash: "-",
+	},
+	"iso-fr": {
+		Backquote: "²",
+		Digit1: "&",
+		Digit2: "é",
+		Digit3: '"',
+		Digit4: "'",
+		Digit5: "(",
+		Digit6: "-",
+		Digit7: "è",
+		Digit8: "_",
+		Digit9: "ç",
+		Digit0: "à",
+		Minus: ")",
+		Equal: "=",
+		KeyQ: "A",
+		KeyW: "Z",
+		KeyA: "Q",
+		KeyZ: "W",
+		BracketLeft: "^",
+		BracketRight: "$",
+		Semicolon: "M",
+		Quote: "Ù",
+		KeyM: ",",
+		Comma: ";",
+		Period: ":",
+		Slash: "!",
+	},
+};
+
+/** Locale-aware legend for a physical key code. */
+export function keyLegend(code: string, layout: KeyboardLayoutId): string {
+	const override = LAYOUT_OVERRIDES[layout]?.[code];
+	if (override) return override;
+	if (BASE_LABELS[code]) return BASE_LABELS[code];
 	if (code.startsWith("Key")) return code.slice(3);
 	return code;
+}
+
+/** Backwards-compatible US legend for a key code. */
+export function keyLabel(code: string): string {
+	return keyLegend(code, "ansi-us");
 }
 
 /** Width multiplier for special keys */

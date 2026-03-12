@@ -34,6 +34,7 @@ The toolkit is built on standard browser APIs, but individual diagnostics depend
 
 - Physical key layouts and IME behavior can vary by locale
 - Browser shortcuts and OS shortcuts may prevent some keys from being captured
+- Browsers usually expose physical key codes more reliably than exact printed legends, so locale-aware labels should be treated as approximate when keyboards are remapped or IMEs are active
 
 ### Pointer / wheel events
 

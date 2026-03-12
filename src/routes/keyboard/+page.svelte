@@ -1,9 +1,12 @@
 <script lang="ts">
 	import { onMount } from "svelte";
 	import {
+		KEYBOARD_LAYOUTS,
 		KEYBOARD_ROWS,
 		keyLabel,
+		keyLegend,
 		keyWidth,
+		type KeyboardLayoutId,
 		type KeyState,
 	} from "$lib/utils/keyboard";
 	import { Keyboard, RotateCcw } from "lucide-svelte";
@@ -11,6 +14,7 @@
 	let keys = $state<Map<string, KeyState>>(new Map());
 	let lastKey = $state("");
 	let totalPresses = $state(0);
+	let selectedLayout = $state<KeyboardLayoutId>("ansi-us");
 
 	const interactiveSelector =
 		"button, a, input, select, textarea, summary, audio, [contenteditable='true']";
@@ -94,6 +98,31 @@
 		</p>
 	</div>
 
+	<div class="bg-surface-light mb-6 grid gap-4 rounded-xl p-4 md:grid-cols-[1fr_auto] md:items-end">
+		<div>
+			<label class="block">
+				<span class="text-text-muted mb-2 block text-sm font-medium">Keyboard layout</span>
+				<select
+					bind:value={selectedLayout}
+					class="bg-surface border-surface-lighter text-text w-full rounded-lg border px-3 py-2 text-sm md:w-72"
+				>
+					{#each KEYBOARD_LAYOUTS as layout}
+						<option value={layout.id}>{layout.label}</option>
+					{/each}
+				</select>
+			</label>
+			<p class="text-text-muted mt-2 text-xs">
+				Physical key detection still follows browser key codes. Printed legends vary by locale,
+				IME behavior, and OS remapping, so the selected layout is a helpful approximation.
+			</p>
+		</div>
+		<div class="text-text-muted text-sm md:text-right">
+			{#each KEYBOARD_LAYOUTS.filter((layout) => layout.id === selectedLayout) as layout}
+				<span>{layout.description}</span>
+			{/each}
+		</div>
+	</div>
+
 	<!-- Stats Bar -->
 	<div class="bg-surface-light mb-6 flex flex-wrap items-center justify-between gap-4 rounded-xl p-4">
 		<div class="flex flex-wrap gap-6 text-sm">
@@ -105,7 +134,7 @@
 			</span>
 			{#if lastKey}
 				<span class="text-text-muted">
-					Last Key: <strong class="text-brand-light">{keyLabel(lastKey)}</strong>
+					Last Key: <strong class="text-brand-light">{keyLegend(lastKey, selectedLayout)}</strong>
 				</span>
 			{/if}
 		</div>
@@ -134,7 +163,7 @@
 									: 'bg-surface border-surface-lighter text-text-muted hover:border-surface-lighter'}"
 							style="width: {keyWidth(code) * 48}px; min-height: 44px;"
 						>
-							{keyLabel(code)}
+							{keyLegend(code, selectedLayout)}
 						</div>
 					{/each}
 				</div>
