@@ -56,6 +56,12 @@ Branded production deployments can add:
 
 Those are intentionally outside the core architecture boundary.
 
+### 5. Validation boundary
+
+The public repository intentionally keeps only thin public validation for repository, branding, and boundary checks.
+
+Comprehensive browser and device evaluation work stays private as private evaluation assets, including browser / device regression suites, golden datasets, hidden fixtures, and tolerance thresholds.
+
 ## Design principles
 
 - browser-native first

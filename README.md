@@ -46,13 +46,20 @@ This repository contains:
 
 - browser API integrations
 - UI components for diagnostics
-- testable core logic
+- maintainable core logic
+- thin public validation for repo and boundary checks
 - local development workflow
 - public technical documentation
 
-This repository does **not** contain the private growth stack for any branded deployment.
+This repository does **not** contain:
+
+- the private growth stack for any branded deployment
+- private evaluation assets
+- browser / device regression suites
+- golden datasets, hidden fixtures, or tolerance thresholds
 
 See [SPONSORING.md](./SPONSORING.md) for the sponsor / maintainer / production boundary.
+See [TESTING_BOUNDARY.md](./TESTING_BOUNDARY.md) for the public-vs-private validation split.
 
 ## ❤️ Support the maintainer and sponsor
 
@@ -75,12 +82,24 @@ If you want to help expand browser hardware diagnostics capabilities, start here
 - [MEASUREMENT_LIMITS.md](./MEASUREMENT_LIMITS.md)
 - [PERMISSION_CHECKLIST.md](./PERMISSION_CHECKLIST.md)
 - [CHANGELOG.md](./CHANGELOG.md)
+- [TESTING_BOUNDARY.md](./TESTING_BOUNDARY.md)
 - [DISCUSSIONS.md](./DISCUSSIONS.md)
 - [Discussions](https://github.com/OneSpiral/browser-hardware-diagnostics/discussions)
 - [Releases](https://github.com/OneSpiral/browser-hardware-diagnostics/releases)
 - [Project board](https://github.com/users/OneSpiral/projects/3)
 
-We want contributors to improve the toolkit itself — better diagnostics primitives, better browser compatibility, better test ergonomics, and better extensibility.
+We want contributors to improve the toolkit itself — better diagnostics primitives, better browser compatibility, better public validation ergonomics, and better extensibility.
+
+## Public testing boundary
+
+This repository intentionally keeps only thin public validation:
+
+- repository governance and boundary checks
+- sponsor / maintainer / branding boundary checks
+- non-sensitive smoke coverage for the OSS surface
+
+Comprehensive browser and device evaluation work stays private as private evaluation assets.
+That includes browser / device regression suites, golden datasets, hidden fixtures, and tolerance thresholds.
 
 ## Quick start
 
@@ -100,9 +119,11 @@ pnpm dev
 - **Testing**: Vitest
 - **Deploy target for branded sites**: Cloudflare Pages
 
-## Build
+## Validation
 
 ```bash
+pnpm test:public
+pnpm check
 pnpm build
 ```
 

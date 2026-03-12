@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
+import { dirname, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { dirname, resolve } from "node:path";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const sponsoringPath = resolve(root, "SPONSORING.md");
@@ -11,6 +11,7 @@ const codeownersPath = resolve(root, ".github/CODEOWNERS");
 const compatibilityPath = resolve(root, "COMPATIBILITY.md");
 const measurementLimitsPath = resolve(root, "MEASUREMENT_LIMITS.md");
 const permissionChecklistPath = resolve(root, "PERMISSION_CHECKLIST.md");
+const testingBoundaryPath = resolve(root, "TESTING_BOUNDARY.md");
 const discussionsPath = resolve(root, "DISCUSSIONS.md");
 const triagePath = resolve(root, "TRIAGE.md");
 const securityPath = resolve(root, "SECURITY.md");
@@ -27,8 +28,33 @@ const fundingPath = resolve(root, ".github/FUNDING.yml");
 const packageJsonPath = resolve(root, "package.json");
 const readmePath = resolve(root, "README.md");
 
+const allowedPublicTests = [
+	"src/lib/public-branding.test.ts",
+	"src/lib/repository-docs.test.ts",
+	"src/lib/site.test.ts",
+];
+
+function collectTestFiles(directory: string): string[] {
+	const entries = readdirSync(directory, { withFileTypes: true });
+	const files: string[] = [];
+
+	for (const entry of entries) {
+		const entryPath = resolve(directory, entry.name);
+		if (entry.isDirectory()) {
+			files.push(...collectTestFiles(entryPath));
+			continue;
+		}
+
+		if (entry.isFile() && entry.name.endsWith(".test.ts")) {
+			files.push(relative(root, entryPath).replace(/\\/g, "/"));
+		}
+	}
+
+	return files.sort();
+}
+
 describe("repository sponsorship docs", () => {
-	it("has dedicated sponsorship and community documents", () => {
+	it("has dedicated sponsorship, governance, and testing-boundary documents", () => {
 		expect(existsSync(sponsoringPath)).toBe(true);
 		expect(existsSync(contributingPath)).toBe(true);
 		expect(existsSync(codeOfConductPath)).toBe(true);
@@ -36,6 +62,7 @@ describe("repository sponsorship docs", () => {
 		expect(existsSync(compatibilityPath)).toBe(true);
 		expect(existsSync(measurementLimitsPath)).toBe(true);
 		expect(existsSync(permissionChecklistPath)).toBe(true);
+		expect(existsSync(testingBoundaryPath)).toBe(true);
 		expect(existsSync(discussionsPath)).toBe(true);
 		expect(existsSync(triagePath)).toBe(true);
 		expect(existsSync(securityPath)).toBe(true);
@@ -68,7 +95,7 @@ describe("repository sponsorship docs", () => {
 		expect(license).toContain("Permission is hereby granted, free of charge");
 	});
 
-	it("surfaces maintainer, sponsor, and community positioning in the README", () => {
+	it("surfaces maintainer, sponsor, community, and release positioning in the README", () => {
 		const readme = readFileSync(readmePath, "utf8");
 		expect(readme).toContain("browser hardware diagnostics toolkit");
 		expect(readme).toContain("Maintained by **[OneSpiral](https://github.com/OneSpiral)**");
@@ -76,13 +103,18 @@ describe("repository sponsorship docs", () => {
 		expect(readme).toContain("community");
 		expect(readme).toContain("actions/workflows/ci.yml");
 		expect(readme).toContain("/releases");
+		expect(readme).toContain("TESTING_BOUNDARY.md");
+		expect(readme).toContain("private evaluation assets");
 	});
 
-	it("describes how contributors can improve technical capabilities", () => {
+	it("describes how contributors can improve technical capabilities without exposing proprietary evals", () => {
 		const contributing = readFileSync(contributingPath, "utf8");
 		expect(contributing).toContain("technical capabilities");
 		expect(contributing).toContain("issues");
 		expect(contributing).toContain("pull requests");
+		expect(contributing).toContain("private evaluation assets");
+		expect(contributing).toContain("golden datasets");
+		expect(contributing).toContain("pnpm test:public");
 	});
 
 	it("includes a contributor code of conduct", () => {
@@ -131,7 +163,8 @@ describe("repository sponsorship docs", () => {
 		expect(ciWorkflow).toContain("pull_request");
 		expect(ciWorkflow).toContain("push");
 		expect(ciWorkflow).toContain("pnpm install");
-		expect(ciWorkflow).toContain("npx vitest run");
+		expect(ciWorkflow).toContain("pnpm test:public");
+		expect(ciWorkflow).not.toContain("npx vitest run");
 		expect(ciWorkflow).toContain("pnpm check");
 		expect(ciWorkflow).toContain("pnpm build");
 		expect(dependabot).toContain("package-ecosystem: npm");
@@ -142,11 +175,13 @@ describe("repository sponsorship docs", () => {
 		expect(releaseConfig).toContain("enhancement");
 	});
 
-	it("pins known vulnerable transitive dependencies through pnpm overrides when needed", () => {
+	it("pins known vulnerable transitive dependencies and exposes a thin public test script", () => {
 		const packageJson = readFileSync(packageJsonPath, "utf8");
 		expect(packageJson).toContain('"pnpm"');
 		expect(packageJson).toContain('"overrides"');
 		expect(packageJson).toContain('"cookie"');
+		expect(packageJson).toContain('"test:public"');
+		expect(packageJson).toContain("repository-docs.test.ts");
 	});
 
 	it("documents how discussions should be used", () => {
@@ -231,11 +266,26 @@ describe("repository sponsorship docs", () => {
 		expect(checklist).toContain("microphone");
 	});
 
-	it("links compatibility, measurement, permission, and changelog docs from the README", () => {
+	it("links compatibility, measurement, permission, changelog, and testing-boundary docs from the README", () => {
 		const readme = readFileSync(readmePath, "utf8");
 		expect(readme).toContain("[COMPATIBILITY.md](./COMPATIBILITY.md)");
 		expect(readme).toContain("[MEASUREMENT_LIMITS.md](./MEASUREMENT_LIMITS.md)");
 		expect(readme).toContain("[PERMISSION_CHECKLIST.md](./PERMISSION_CHECKLIST.md)");
 		expect(readme).toContain("[CHANGELOG.md](./CHANGELOG.md)");
+		expect(readme).toContain("[TESTING_BOUNDARY.md](./TESTING_BOUNDARY.md)");
+	});
+
+	it("documents the public testing boundary and keeps proprietary eval assets private", () => {
+		const testingBoundary = readFileSync(testingBoundaryPath, "utf8");
+		expect(testingBoundary).toContain("private evaluation assets");
+		expect(testingBoundary).toContain("browser / device regression suites");
+		expect(testingBoundary).toContain("golden datasets");
+		expect(testingBoundary).toContain("tolerance thresholds");
+		expect(testingBoundary).toContain("thin public validation");
+	});
+
+	it("keeps the public test surface limited to non-sensitive boundary checks", () => {
+		expect(statSync(resolve(root, "src")).isDirectory()).toBe(true);
+		expect(collectTestFiles(resolve(root, "src"))).toEqual(allowedPublicTests);
 	});
 });

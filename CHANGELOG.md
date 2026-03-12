@@ -6,9 +6,10 @@ The format is inspired by Keep a Changelog.
 
 ## Unreleased
 
-### Added
+### Changed
 
-- no unreleased entries yet
+- public validation now stays limited to non-sensitive repository, branding, and boundary checks
+- comprehensive browser and device evaluation assets are explicitly kept out of the public repository
 
 ## 0.1.0 — 2026-03-12
 

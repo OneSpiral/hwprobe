@@ -36,8 +36,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Run tests
-        run: npx vitest run
+      - name: Run public boundary tests
+        run: pnpm test:public
 
       - name: Run type and Svelte checks
         run: pnpm check

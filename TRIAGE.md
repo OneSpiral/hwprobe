@@ -71,3 +71,5 @@ The current public backlog lives in the project board:
 ## Boundary reminder
 
 The public backlog should stay focused on reusable technical capabilities, not branded growth or monetization work.
+
+Do not route private evaluation assets through public issues, including browser / device regression suites, golden datasets, hidden fixtures, or tolerance thresholds.

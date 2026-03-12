@@ -12,7 +12,7 @@ We especially welcome issues and pull requests for:
 - cleaner hardware diagnostics APIs
 - more accurate measurements
 - accessibility improvements
-- test coverage
+- public validation ergonomics
 - performance improvements
 - extensibility for new diagnostic modules
 - better developer ergonomics
@@ -41,26 +41,29 @@ Please keep pull requests scoped and technical.
 A good pull request should:
 
 - improve the toolkit itself
-- include tests when behavior changes
+- keep public validation thin and non-sensitive
 - avoid private growth logic or monetization logic
 - explain the technical tradeoffs clearly
 
+Do **not** add private evaluation assets to the public repository, including browser / device regression suites, golden datasets, hidden fixtures, or tolerance thresholds.
+
 ## Development flow
 
-This repository follows a TDD-first workflow:
+This repository follows a TDD-first workflow, but comprehensive regression coverage stays private:
 
-1. write a failing test
+1. write a failing public boundary or smoke check when that can be shared safely
 2. make it pass
 3. refactor safely
 4. run checks before commit
+5. maintainers can extend private evaluation assets separately when needed
 
 ## Validation
 
 Run before submitting pull requests:
 
 ```bash
+pnpm test:public
 pnpm check
-npx vitest run
 pnpm build
 ```
 
