@@ -6,6 +6,12 @@ export interface GamepadButtonStubOptions {
 	value?: number;
 }
 
+interface GamepadHapticActuatorStub {
+	type?: string;
+	playEffect?: (effectType: string, params: Record<string, number>) => Promise<unknown> | unknown;
+	pulse?: (value: number, duration: number) => Promise<unknown> | unknown;
+}
+
 export interface GamepadStubOptions {
 	id?: string;
 	index?: number;
@@ -13,6 +19,8 @@ export interface GamepadStubOptions {
 	axes?: number[];
 	timestamp?: number;
 	mapping?: GamepadMappingType;
+	vibrationActuator?: GamepadHapticActuatorStub | null;
+	hapticActuators?: GamepadHapticActuatorStub[] | null;
 }
 
 export interface MediaStreamStubOptions {
@@ -48,6 +56,8 @@ export function createGamepadStub(options: GamepadStubOptions = {}): Gamepad {
 		axes = [],
 		timestamp = 0,
 		mapping = "standard",
+		vibrationActuator = null,
+		hapticActuators = null,
 	} = options;
 
 	return {
@@ -58,7 +68,8 @@ export function createGamepadStub(options: GamepadStubOptions = {}): Gamepad {
 		timestamp,
 		buttons,
 		axes,
-		vibrationActuator: null,
+		vibrationActuator,
+		hapticActuators,
 	} as unknown as Gamepad;
 }
 

@@ -19,13 +19,41 @@ export const BUTTON_LABELS = [
 	"Home",
 ] as const;
 
+export type GamepadHapticsMode = "vibrationActuator" | "hapticActuators" | "none";
+
+export interface GamepadHapticsCapability {
+	supported: boolean;
+	mode: GamepadHapticsMode;
+	actuatorType: string | null;
+}
+
 export interface GamepadSnapshot {
 	id: string;
 	index: number;
 	buttons: { pressed: boolean; value: number }[];
 	axes: number[];
 	timestamp: number;
+	haptics: GamepadHapticsCapability;
 }
+
+interface GamepadHapticActuatorLike {
+	type?: string;
+	playEffect?: (
+		effectType: string,
+		params: {
+			duration: number;
+			startDelay?: number;
+			strongMagnitude?: number;
+			weakMagnitude?: number;
+		},
+	) => Promise<unknown> | unknown;
+	pulse?: (value: number, duration: number) => Promise<unknown> | unknown;
+}
+
+type ExtendedGamepad = Gamepad & {
+	vibrationActuator?: GamepadHapticActuatorLike | null;
+	hapticActuators?: GamepadHapticActuatorLike[] | null;
+};
 
 function snapshotGamepad(gamepad: Gamepad): GamepadSnapshot {
 	return {
@@ -34,6 +62,7 @@ function snapshotGamepad(gamepad: Gamepad): GamepadSnapshot {
 		buttons: gamepad.buttons.map((b) => ({ pressed: b.pressed, value: b.value })),
 		axes: gamepad.axes.map((a) => a),
 		timestamp: gamepad.timestamp,
+		haptics: resolveGamepadHapticsCapability(gamepad),
 	};
 }
 
@@ -62,6 +91,70 @@ export function resolveActiveGamepad(
 		if (selected) return selected;
 	}
 	return snapshots[0];
+}
+
+export function resolveGamepadHapticsCapability(gamepad: Gamepad): GamepadHapticsCapability {
+	const extendedGamepad = gamepad as ExtendedGamepad;
+
+	if (extendedGamepad.vibrationActuator) {
+		return {
+			supported: true,
+			mode: "vibrationActuator",
+			actuatorType: extendedGamepad.vibrationActuator.type ?? null,
+		};
+	}
+
+	if (Array.isArray(extendedGamepad.hapticActuators) && extendedGamepad.hapticActuators.length > 0) {
+		return {
+			supported: true,
+			mode: "hapticActuators",
+			actuatorType: extendedGamepad.hapticActuators[0]?.type ?? null,
+		};
+	}
+
+	return {
+		supported: false,
+		mode: "none",
+		actuatorType: null,
+	};
+}
+
+function resolveGamepadActuator(gamepad: Gamepad): GamepadHapticActuatorLike | null {
+	const extendedGamepad = gamepad as ExtendedGamepad;
+	if (extendedGamepad.vibrationActuator) return extendedGamepad.vibrationActuator;
+	if (Array.isArray(extendedGamepad.hapticActuators) && extendedGamepad.hapticActuators.length > 0) {
+		return extendedGamepad.hapticActuators[0] ?? null;
+	}
+	return null;
+}
+
+export async function triggerGamepadHaptics(index: number): Promise<boolean> {
+	const gamepad = navigator.getGamepads()[index];
+	if (!gamepad) return false;
+
+	const actuator = resolveGamepadActuator(gamepad);
+	if (!actuator) return false;
+
+	try {
+		if (typeof actuator.playEffect === "function") {
+			await actuator.playEffect("dual-rumble", {
+				duration: 250,
+				startDelay: 0,
+				strongMagnitude: 1,
+				weakMagnitude: 0.75,
+			});
+			return true;
+		}
+
+		if (typeof actuator.pulse === "function") {
+			await actuator.pulse(1, 250);
+			return true;
+		}
+	} catch {
+		return false;
+	}
+
+	return false;
 }
 
 /** Calculate deadzone percentage from axis values */

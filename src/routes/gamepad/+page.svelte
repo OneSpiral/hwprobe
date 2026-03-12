@@ -5,11 +5,14 @@
 		axisToPixel,
 		readConnectedGamepads,
 		resolveActiveGamepad,
+		triggerGamepadHaptics,
 	} from "$lib/utils/gamepad";
 	import { Gamepad2 } from "lucide-svelte";
 
 	let connectedGamepads = $state<ReturnType<typeof readConnectedGamepads>>([]);
 	let selectedGamepadIndex = $state<number | null>(null);
+	let hapticsMessage = $state("");
+	let hapticsTesting = $state(false);
 	let animFrame = 0;
 
 	const STICK_SIZE = 120;
@@ -20,6 +23,9 @@
 	const gamepadId = $derived(activeGamepad?.id ?? "");
 	const buttons = $derived(activeGamepad?.buttons ?? []);
 	const axes = $derived(activeGamepad?.axes ?? []);
+	const haptics = $derived(
+		activeGamepad?.haptics ?? { supported: false, mode: "none", actuatorType: null },
+	);
 
 	function syncGamepads() {
 		connectedGamepads = readConnectedGamepads();
@@ -59,6 +65,16 @@
 
 	function buttonLabel(i: number): string {
 		return BUTTON_LABELS[i] ?? `B${i}`;
+	}
+
+	async function runHapticsTest() {
+		if (!activeGamepad) return;
+		hapticsTesting = true;
+		const ok = await triggerGamepadHaptics(activeGamepad.index);
+		hapticsMessage = ok
+			? "Test pulse requested. If your controller supports browser haptics, you should feel a short vibration."
+			: "This browser or controller did not expose a runnable haptics actuator.";
+		hapticsTesting = false;
 	}
 </script>
 
@@ -245,15 +261,61 @@
 			</section>
 		{/if}
 
+		<section class="mb-8">
+			<h2 class="mb-4 text-lg font-semibold">Haptics & Vibration</h2>
+			<div class="bg-surface-light rounded-xl p-5">
+				<div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+					<div>
+						<p class="text-text text-sm font-medium">
+							{#if haptics.supported}
+								Exposed by this controller
+							{:else}
+								Not exposed in the current browser/controller pairing
+							{/if}
+						</p>
+						<p class="text-text-muted text-xs">
+							Mode: {haptics.mode}
+							{#if haptics.actuatorType}
+								— {haptics.actuatorType}
+							{/if}
+						</p>
+					</div>
+					{#if haptics.supported}
+						<button
+							type="button"
+							onclick={runHapticsTest}
+							class="bg-brand hover:bg-brand-dark rounded-lg px-4 py-2 text-sm font-medium text-white transition-colors disabled:cursor-not-allowed disabled:opacity-60"
+							disabled={hapticsTesting}
+						>
+							{hapticsTesting ? "Running…" : "Run Test Pulse"}
+						</button>
+					{/if}
+				</div>
+				<p class="text-text-muted text-sm">
+					Haptics support varies widely across browsers, operating systems, and controller
+					firmware. Even when a controller exposes a vibration actuator, some browsers only
+					support limited `dual-rumble` behavior or no user-visible effect at all.
+				</p>
+				{#if hapticsMessage}
+					<p class="text-text-muted mt-3 text-xs">{hapticsMessage}</p>
+				{/if}
+			</div>
+		</section>
+
 		<!-- Raw Data -->
 		<details class="bg-surface-light rounded-xl p-4">
 			<summary class="text-text-muted cursor-pointer text-sm font-medium">Raw Data</summary>
 			<pre class="text-text-muted mt-3 overflow-x-auto text-xs">{JSON.stringify(
 					{
 						activeController: selectedGamepadIndex,
-						connectedControllers: connectedGamepads.map(({ id, index }) => ({ id, index })),
+						connectedControllers: connectedGamepads.map(({ id, index, haptics }) => ({
+							id,
+							index,
+							haptics,
+						})),
 						buttons: buttons.map((b, i) => ({ label: buttonLabel(i), ...b })),
 						axes,
+						haptics,
 					},
 					null,
 					2,

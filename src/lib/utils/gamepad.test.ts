@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import {
 	createGamepadButtonStub,
 	createGamepadStub,
@@ -11,6 +11,9 @@ import {
 	calcDeadzone,
 	readConnectedGamepads,
 	resolveActiveGamepad,
+	resolveGamepadHapticsCapability,
+	triggerGamepadHaptics,
+	type GamepadSnapshot,
 } from "./gamepad";
 
 afterEach(() => {
@@ -59,9 +62,23 @@ describe("gamepad utils", () => {
 	});
 
 	describe("resolveActiveGamepad", () => {
-		const snapshots = [
-			{ id: "Pad A", index: 0, buttons: [], axes: [], timestamp: 1 },
-			{ id: "Pad B", index: 2, buttons: [], axes: [], timestamp: 2 },
+		const snapshots: GamepadSnapshot[] = [
+			{
+				id: "Pad A",
+				index: 0,
+				buttons: [],
+				axes: [],
+				timestamp: 1,
+				haptics: { supported: false, mode: "none", actuatorType: null },
+			},
+			{
+				id: "Pad B",
+				index: 2,
+				buttons: [],
+				axes: [],
+				timestamp: 2,
+				haptics: { supported: false, mode: "none", actuatorType: null },
+			},
 		];
 
 		it("returns the selected controller when its slot is still connected", () => {
@@ -74,6 +91,71 @@ describe("gamepad utils", () => {
 
 		it("returns null when no controllers are connected", () => {
 			expect(resolveActiveGamepad([], 0)).toBeNull();
+		});
+	});
+
+	describe("resolveGamepadHapticsCapability", () => {
+		it("detects vibrationActuator support when exposed", () => {
+			const capability = resolveGamepadHapticsCapability(
+				createGamepadStub({
+					vibrationActuator: {
+						type: "dual-rumble",
+						playEffect: async () => "complete",
+					},
+				}),
+			);
+
+			expect(capability).toEqual({
+				supported: true,
+				mode: "vibrationActuator",
+				actuatorType: "dual-rumble",
+			});
+		});
+
+		it("falls back to hapticActuators arrays when present", () => {
+			const capability = resolveGamepadHapticsCapability(
+				createGamepadStub({
+					hapticActuators: [{ type: "vibration" }],
+					vibrationActuator: null,
+				}),
+			);
+
+			expect(capability).toEqual({
+				supported: true,
+				mode: "hapticActuators",
+				actuatorType: "vibration",
+			});
+		});
+
+		it("returns none when the controller does not expose haptics", () => {
+			expect(resolveGamepadHapticsCapability(createGamepadStub())).toEqual({
+				supported: false,
+				mode: "none",
+				actuatorType: null,
+			});
+		});
+	});
+
+	describe("triggerGamepadHaptics", () => {
+		it("uses vibrationActuator.playEffect when available", async () => {
+			const playEffect = vi.fn(async () => "complete");
+			stubNavigatorGamepads([
+				createGamepadStub({
+					index: 0,
+					vibrationActuator: {
+						type: "dual-rumble",
+						playEffect,
+					},
+				}),
+			]);
+
+			await expect(triggerGamepadHaptics(0)).resolves.toBe(true);
+			expect(playEffect).toHaveBeenCalled();
+		});
+
+		it("fails safely when the selected controller has no haptics support", async () => {
+			stubNavigatorGamepads([createGamepadStub({ index: 0 })]);
+			await expect(triggerGamepadHaptics(0)).resolves.toBe(false);
 		});
 	});
 
