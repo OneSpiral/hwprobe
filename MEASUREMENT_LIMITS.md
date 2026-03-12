@@ -62,6 +62,17 @@ Important caveats:
 - losing browser focus, opening a context menu, or leaving the browser window can interrupt the sequence
 - browsers and operating systems may differ in pointer capture, coalescing, or delivery behavior
 
+## Motion and ghosting pattern limits
+
+Browser-based motion and ghosting patterns are useful for visual comparison, but they are still rendered through the browser compositor rather than directly by the display pipeline.
+
+Important caveats:
+
+- perceived ghosting can be affected by browser compositing, frame pacing, and fullscreen behavior
+- sample-and-hold blur from the display itself can be hard to separate from browser-delivered motion artifacts
+- motion speed on the page is only as stable as the browser's rendering cadence
+- different browsers, GPUs, and display chains can change the apparent sharpness of the moving pattern
+
 ## Browser and environment factors
 
 Measurement quality can vary with:
