@@ -88,10 +88,19 @@ describe("repository sponsorship docs", () => {
 	it("asks for richer technical context in issue forms", () => {
 		const bugTemplate = readFileSync(bugTemplatePath, "utf8");
 		const featureTemplate = readFileSync(featureTemplatePath, "utf8");
+		expect(bugTemplate).toContain("Summary");
 		expect(bugTemplate).toContain("Browser");
+		expect(bugTemplate).toContain("Expected behavior");
+		expect(bugTemplate).toContain("Actual behavior");
 		expect(bugTemplate).toContain("Console output");
+		expect(bugTemplate).toContain("SECURITY.md");
+		expect(featureTemplate).toContain("[scope]: concise action");
+		expect(featureTemplate).toContain("Summary");
+		expect(featureTemplate).toContain("Scope");
+		expect(featureTemplate).toContain("Why this matters");
 		expect(featureTemplate).toContain("API surface");
 		expect(featureTemplate).toContain("Acceptance criteria");
+		expect(featureTemplate).toContain("Non-goals");
 	});
 
 	it("documents how discussions should be used", () => {
@@ -99,6 +108,13 @@ describe("repository sponsorship docs", () => {
 		expect(discussions).toContain("design ideas");
 		expect(discussions).toContain("security");
 		expect(discussions).toContain("browser compatibility");
+	});
+
+	it("documents public issue writing conventions", () => {
+		const contributing = readFileSync(contributingPath, "utf8");
+		expect(contributing).toContain("scope: concise action");
+		expect(contributing).toContain("Summary");
+		expect(contributing).toContain("Acceptance criteria");
 	});
 
 	it("documents triage rules for labels and collaboration flow", () => {
@@ -110,6 +126,7 @@ describe("repository sponsorship docs", () => {
 		expect(triage).toContain("priority: p1");
 		expect(triage).toContain("status: ready");
 		expect(triage).toContain("milestone");
+		expect(triage).toContain("scope: concise action");
 	});
 
 	it("publishes a browser compatibility matrix for all diagnostics modules", () => {

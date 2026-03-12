@@ -1,14 +1,28 @@
 name: Bug report
-description: Report a technical issue in the browser diagnostics toolkit
-title: "bug: "
+description: Report a reproducible technical issue in the browser hardware diagnostics toolkit
+title: "bug: concise summary"
 labels:
   - bug
 body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for non-sensitive technical bugs in the public toolkit.
+
+        If the issue may be security-sensitive, especially around permissions or media APIs, please use `SECURITY.md` instead of opening a public issue.
   - type: textarea
     id: summary
     attributes:
       label: Summary
-      description: Describe the technical problem clearly.
+      description: Describe the technical problem clearly and neutrally.
+    validations:
+      required: true
+  - type: input
+    id: affected-area
+    attributes:
+      label: Affected area
+      description: Which diagnostic module or shared component is affected?
+      placeholder: gamepad / keyboard / mouse / monitor / microphone / speakers / shared UI
     validations:
       required: true
   - type: input
@@ -28,10 +42,24 @@ body:
     validations:
       required: true
   - type: textarea
-    id: reproduction
+    id: steps-to-reproduce
     attributes:
-      label: Reproduction
-      description: Include browser, device, steps, and expected vs actual behavior.
+      label: Steps to reproduce
+      description: List the exact steps needed to reproduce the issue.
+    validations:
+      required: true
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected behavior
+      description: Explain what should happen.
+    validations:
+      required: true
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: Actual behavior
+      description: Explain what happens instead.
     validations:
       required: true
   - type: textarea
@@ -43,7 +71,7 @@ body:
   - type: textarea
     id: scope
     attributes:
-      label: Scope
+      label: Scope / impact
       description: Explain the reusable technical impact on the toolkit.
     validations:
       required: true

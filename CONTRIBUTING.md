@@ -23,6 +23,17 @@ We especially welcome issues and pull requests for:
 2. If the change is non-trivial, open an issue describing the problem and proposed approach.
 3. Keep feature requests focused on reusable technical value.
 
+## Writing issues
+
+When opening public issues, use neutral, contributor-facing wording:
+
+- prefer titles in the form `scope: concise action`
+- start with a short **Summary**
+- include **Scope** for the affected module, API, or shared primitive
+- explain **Why this matters** when proposing new work
+- include **Acceptance criteria** when you can define a clear finish line
+- send anything sensitive to `SECURITY.md` instead of a public issue
+
 ## Pull requests
 
 Please keep pull requests scoped and technical.

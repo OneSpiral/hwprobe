@@ -47,6 +47,13 @@ Use milestone buckets to group work:
 - use **Issues** for scoped, actionable work
 - use **SECURITY.md** for anything sensitive instead of a public issue
 
+## Issue writing conventions
+
+- prefer titles in the form `scope: concise action`
+- start with **Summary** and add **Scope** when possible
+- include **Acceptance criteria** for scoped proposals
+- keep wording neutral, public, and reusable
+
 ## Maintainer triage flow
 
 1. decide whether the report is a discussion, issue, or private security report

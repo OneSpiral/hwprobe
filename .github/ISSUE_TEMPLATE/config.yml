@@ -3,6 +3,9 @@ contact_links:
   - name: Community discussions
     url: https://github.com/OneSpiral/browser-hardware-diagnostics/discussions
     about: Use discussions for open-ended technical questions and design ideas.
+  - name: Security policy
+    url: https://github.com/OneSpiral/browser-hardware-diagnostics/blob/main/SECURITY.md
+    about: Use SECURITY.md for sensitive permission, media, or other security issues.
   - name: Sponsor / production adopter
     url: https://hwprobe.com
     about: The branded production adopter lives at hwprobe.com.
