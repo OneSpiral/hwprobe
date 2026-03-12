@@ -166,6 +166,16 @@ describe("repository sponsorship docs", () => {
 		expect(triage).toContain("scope: concise action");
 	});
 
+	it("keeps the roadmap populated with the next public work wave", () => {
+		const roadmap = readFileSync(roadmapPath, "utf8");
+		expect(roadmap).toContain("Current public issue wave");
+		expect(roadmap).toContain("haptics");
+		expect(roadmap).toContain("locale-aware");
+		expect(roadmap).toContain("drag / hold");
+		expect(roadmap).toContain("ghosting");
+		expect(roadmap).toContain("fixtures");
+	});
+
 	it("publishes a browser compatibility matrix for all diagnostics modules", () => {
 		const compatibility = readFileSync(compatibilityPath, "utf8");
 		expect(compatibility).toContain("Chrome");

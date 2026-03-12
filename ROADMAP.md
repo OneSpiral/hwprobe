@@ -6,10 +6,19 @@ Build the best open-source browser hardware diagnostics toolkit, with community 
 
 ## Near term
 
-- improve repository positioning as a neutral technical solution
-- make contribution boundaries clearer
 - strengthen shared diagnostics primitives
 - improve documentation for adopters and contributors
+- grow the next contributor-ready public backlog wave
+
+## Current public issue wave
+
+The next public backlog wave focuses on reusable technical improvements that fit the open-source toolkit boundary:
+
+- gamepad haptics and vibration capability diagnostics
+- locale-aware keyboard legends and layout caveats
+- mouse drag / hold diagnostics primitives
+- monitor motion and ghosting utilities
+- reusable browser API fixtures and mocks for diagnostics tests
 
 ## Diagnostics roadmap
 
