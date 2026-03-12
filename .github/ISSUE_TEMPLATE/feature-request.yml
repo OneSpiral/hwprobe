@@ -19,6 +19,20 @@ body:
     validations:
       required: true
   - type: textarea
+    id: api-surface
+    attributes:
+      label: API surface
+      description: Explain the proposed public API, primitives, or extension surface.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance criteria
+      description: Define what would make the feature complete and technically reusable.
+    validations:
+      required: true
+  - type: textarea
     id: non-goals
     attributes:
       label: Non-goals

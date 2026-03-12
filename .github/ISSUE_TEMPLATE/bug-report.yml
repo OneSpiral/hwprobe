@@ -11,6 +11,22 @@ body:
       description: Describe the technical problem clearly.
     validations:
       required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser
+      description: Which browser and version are affected?
+      placeholder: Chrome 145 / Safari 18 / Firefox 145
+    validations:
+      required: true
+  - type: input
+    id: device
+    attributes:
+      label: Device / OS
+      description: Which device and operating system are involved?
+      placeholder: macOS 15 / Windows 11 / Android 15
+    validations:
+      required: true
   - type: textarea
     id: reproduction
     attributes:
@@ -18,6 +34,12 @@ body:
       description: Include browser, device, steps, and expected vs actual behavior.
     validations:
       required: true
+  - type: textarea
+    id: console-output
+    attributes:
+      label: Console output
+      description: Paste any relevant Console output, stack traces, or browser warnings.
+      render: shell
   - type: textarea
     id: scope
     attributes:
