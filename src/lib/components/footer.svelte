@@ -10,7 +10,7 @@
 		<p class="mb-3">No data leaves your browser. 100% client-side.</p>
 		<div class="flex items-center justify-center gap-4">
 			<a
-				href="https://github.com/nicepkg/hwprobe"
+				href="https://github.com/OneSpiral/hwprobe"
 				target="_blank"
 				rel="noopener noreferrer"
 				class="hover:text-brand-light inline-flex items-center gap-1 transition-colors"
@@ -20,7 +20,7 @@
 			</a>
 		</div>
 		<p class="mt-4 text-xs opacity-60">
-			© {new Date().getFullYear()} nicepkg. Open source on GitHub.
+			© {new Date().getFullYear()} OneSpiral. Open source on GitHub.
 		</p>
 	</div>
 </footer>
