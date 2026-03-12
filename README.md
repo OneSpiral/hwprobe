@@ -1,0 +1,51 @@
+# 🔧 HWProbe
+
+**Free, open-source browser tools to test your hardware.**
+
+👉 **[hwprobe.com](https://hwprobe.com)**
+
+Test your gamepad, keyboard, mouse, monitor, microphone & speakers — directly in the browser. No downloads. No data collection. 100% client-side.
+
+## ✨ Features
+
+| Tool | Description |
+|---|---|
+| 🎮 **Gamepad Tester** | Joystick deadzone, button mapping, trigger pressure, drift detection |
+| ⌨️ **Keyboard Tester** | Visual key layout, press counter, test progress, ghosting detection |
+| 🖱️ **Mouse Tester** | Click speed (CPS), button detection, scroll distance, movement tracking |
+| 🖥️ **Monitor Tester** | Refresh rate (FPS), dead pixel test, color gradient, display info |
+| 🎤 **Microphone Tester** | Real-time waveform, volume meter, frequency spectrum, recording |
+| 🔊 **Speaker Tester** | L/R channel test, tone generator, frequency presets, waveform types |
+
+## 🚀 Quick Start
+
+```bash
+git clone https://github.com/nicepkg/hwprobe.git
+cd hwprobe
+bun install
+bun run dev
+```
+
+## 🏗️ Tech Stack
+
+- **Framework**: SvelteKit 2 + Svelte 5 (runes)
+- **Styling**: Tailwind CSS v4
+- **Icons**: Lucide
+- **Build**: Vite 7
+- **Testing**: Vitest
+- **Deploy**: Cloudflare Pages
+
+## 📦 Deploy
+
+```bash
+bun run build
+npx wrangler pages deploy build --project-name=hwprobe
+```
+
+## 🤝 Contributing
+
+PRs welcome! TDD workflow: write a failing test → make it pass → refactor.
+
+## 📄 License
+
+MIT
