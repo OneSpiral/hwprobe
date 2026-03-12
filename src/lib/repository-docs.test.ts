@@ -9,6 +9,7 @@ const contributingPath = resolve(root, "CONTRIBUTING.md");
 const codeOfConductPath = resolve(root, "CODE_OF_CONDUCT.md");
 const codeownersPath = resolve(root, ".github/CODEOWNERS");
 const compatibilityPath = resolve(root, "COMPATIBILITY.md");
+const measurementLimitsPath = resolve(root, "MEASUREMENT_LIMITS.md");
 const permissionChecklistPath = resolve(root, "PERMISSION_CHECKLIST.md");
 const discussionsPath = resolve(root, "DISCUSSIONS.md");
 const triagePath = resolve(root, "TRIAGE.md");
@@ -27,6 +28,7 @@ describe("repository sponsorship docs", () => {
 		expect(existsSync(codeOfConductPath)).toBe(true);
 		expect(existsSync(codeownersPath)).toBe(true);
 		expect(existsSync(compatibilityPath)).toBe(true);
+		expect(existsSync(measurementLimitsPath)).toBe(true);
 		expect(existsSync(permissionChecklistPath)).toBe(true);
 		expect(existsSync(discussionsPath)).toBe(true);
 		expect(existsSync(triagePath)).toBe(true);
@@ -145,6 +147,16 @@ describe("repository sponsorship docs", () => {
 		expect(compatibility).toContain("MediaDevices");
 	});
 
+	it("publishes measurement guidance for refresh-rate and polling estimates", () => {
+		const measurementLimits = readFileSync(measurementLimitsPath, "utf8");
+		expect(measurementLimits).toContain("refresh-rate");
+		expect(measurementLimits).toContain("polling");
+		expect(measurementLimits).toContain("event loop");
+		expect(measurementLimits).toContain("requestAnimationFrame");
+		expect(measurementLimits).toContain("approximate");
+		expect(measurementLimits).toContain("not a replacement for dedicated hardware tools");
+	});
+
 	it("publishes a permission-handling checklist for media diagnostics", () => {
 		const checklist = readFileSync(permissionChecklistPath, "utf8");
 		expect(checklist).toContain("permission prompt");
@@ -154,9 +166,10 @@ describe("repository sponsorship docs", () => {
 		expect(checklist).toContain("microphone");
 	});
 
-	it("links the compatibility matrix and permission checklist from the README", () => {
+	it("links compatibility, measurement, and permission docs from the README", () => {
 		const readme = readFileSync(readmePath, "utf8");
 		expect(readme).toContain("[COMPATIBILITY.md](./COMPATIBILITY.md)");
+		expect(readme).toContain("[MEASUREMENT_LIMITS.md](./MEASUREMENT_LIMITS.md)");
 		expect(readme).toContain("[PERMISSION_CHECKLIST.md](./PERMISSION_CHECKLIST.md)");
 	});
 });

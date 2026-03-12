@@ -70,6 +70,7 @@ If you want to help expand browser hardware diagnostics capabilities, start here
 - [ROADMAP.md](./ROADMAP.md)
 - [TRIAGE.md](./TRIAGE.md)
 - [COMPATIBILITY.md](./COMPATIBILITY.md)
+- [MEASUREMENT_LIMITS.md](./MEASUREMENT_LIMITS.md)
 - [PERMISSION_CHECKLIST.md](./PERMISSION_CHECKLIST.md)
 - [DISCUSSIONS.md](./DISCUSSIONS.md)
 - [Discussions](https://github.com/OneSpiral/browser-hardware-diagnostics/discussions)

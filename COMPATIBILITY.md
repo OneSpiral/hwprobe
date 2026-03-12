@@ -43,6 +43,7 @@ The toolkit is built on standard browser APIs, but individual diagnostics depend
 
 - Refresh-rate diagnostics are affected by frame scheduling, throttling, power settings, and display routing
 - Browser timing APIs do not replace dedicated hardware measurement tools
+- See [MEASUREMENT_LIMITS.md](./MEASUREMENT_LIMITS.md) for deeper guidance on timing and polling accuracy limits
 
 ### MediaDevices / Web Audio API
 
