@@ -117,7 +117,7 @@
 </script>
 
 <svelte:head>
-	<title>Speaker Tester — HWProbe</title>
+	<title>Speaker Tester — Browser Hardware Diagnostics</title>
 	<meta
 		name="description"
 		content="Test your speakers with tone generator, left/right channel test, frequency sweep, and bass response."

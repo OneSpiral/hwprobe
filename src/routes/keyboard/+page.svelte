@@ -63,7 +63,7 @@
 </script>
 
 <svelte:head>
-	<title>Keyboard Tester — HWProbe</title>
+	<title>Keyboard Tester — Browser Hardware Diagnostics</title>
 	<meta
 		name="description"
 		content="Test every key on your keyboard. Detect ghosting, stuck keys, and key rollover with visual feedback."

@@ -24,7 +24,7 @@
 </script>
 
 <svelte:head>
-	<title>HWProbe — Free Online Hardware Testing Tools</title>
+	<title>Browser Hardware Diagnostics — Open-source Toolkit</title>
 	<meta
 		name="description"
 		content="Test your gamepad, keyboard, mouse, monitor, microphone and speakers directly in the browser. Free, open-source, no install required."

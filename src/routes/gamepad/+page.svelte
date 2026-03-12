@@ -68,7 +68,7 @@
 </script>
 
 <svelte:head>
-	<title>Gamepad Tester — HWProbe</title>
+	<title>Gamepad Tester — Browser Hardware Diagnostics</title>
 	<meta
 		name="description"
 		content="Test your gamepad joystick deadzone, buttons, triggers and vibration. Supports Xbox, PlayStation, Nintendo controllers."

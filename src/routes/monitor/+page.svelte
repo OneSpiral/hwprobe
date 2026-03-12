@@ -77,7 +77,7 @@
 </script>
 
 <svelte:head>
-	<title>Monitor Tester — HWProbe</title>
+	<title>Monitor Tester — Browser Hardware Diagnostics</title>
 	<meta
 		name="description"
 		content="Test your monitor refresh rate, dead pixels, and color display. Free online display testing tool."

@@ -123,7 +123,7 @@
 </script>
 
 <svelte:head>
-	<title>Microphone Tester — HWProbe</title>
+	<title>Microphone Tester — Browser Hardware Diagnostics</title>
 	<meta
 		name="description"
 		content="Test your microphone with real-time waveform, volume meter, frequency spectrum and recording playback."

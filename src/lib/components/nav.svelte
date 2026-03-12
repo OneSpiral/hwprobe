@@ -33,7 +33,7 @@
 	<div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
 		<a href="/" class="flex items-center gap-2 text-lg font-bold" onclick={closeMobile}>
 			<Gauge class="text-brand h-6 w-6" />
-			<span>HWProbe</span>
+			<span>Diagnostics</span>
 		</a>
 
 		<button

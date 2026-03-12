@@ -93,7 +93,7 @@
 </script>
 
 <svelte:head>
-	<title>Mouse Tester — HWProbe</title>
+	<title>Mouse Tester — Browser Hardware Diagnostics</title>
 	<meta
 		name="description"
 		content="Test mouse click speed (CPS), buttons, scroll wheel, and tracking accuracy. Free online tool."
