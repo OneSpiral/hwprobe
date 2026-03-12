@@ -6,6 +6,7 @@ import { dirname, resolve } from "node:path";
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const sponsoringPath = resolve(root, "SPONSORING.md");
 const contributingPath = resolve(root, "CONTRIBUTING.md");
+const codeOfConductPath = resolve(root, "CODE_OF_CONDUCT.md");
 const architecturePath = resolve(root, "ARCHITECTURE.md");
 const roadmapPath = resolve(root, "ROADMAP.md");
 const fundingPath = resolve(root, ".github/FUNDING.yml");
@@ -15,6 +16,7 @@ describe("repository sponsorship docs", () => {
 	it("has dedicated sponsorship and community documents", () => {
 		expect(existsSync(sponsoringPath)).toBe(true);
 		expect(existsSync(contributingPath)).toBe(true);
+		expect(existsSync(codeOfConductPath)).toBe(true);
 		expect(existsSync(architecturePath)).toBe(true);
 		expect(existsSync(roadmapPath)).toBe(true);
 	});
@@ -46,5 +48,12 @@ describe("repository sponsorship docs", () => {
 		expect(contributing).toContain("technical capabilities");
 		expect(contributing).toContain("issues");
 		expect(contributing).toContain("pull requests");
+	});
+
+	it("includes a contributor code of conduct", () => {
+		const conduct = readFileSync(codeOfConductPath, "utf8");
+		expect(conduct).toContain("respectful");
+		expect(conduct).toContain("welcoming");
+		expect(conduct).toContain("report");
 	});
 });

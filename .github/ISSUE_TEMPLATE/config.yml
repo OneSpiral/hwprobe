@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Community discussions
+    url: https://github.com/OneSpiral/browser-hardware-diagnostics/discussions
+    about: Use discussions for open-ended technical questions and design ideas.
+  - name: Sponsor / production adopter
+    url: https://hwprobe.com
+    about: The branded production adopter lives at hwprobe.com.
